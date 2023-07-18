@@ -28,30 +28,26 @@ public:
 
 private:
 
+	void MoveUp(float DeltaTime);
+
+	void MoveDown(float DeltaTime);
+
+
 	FVector StartLocation;
-	float DistanceUPZ;
-
-
-	float Alpha;
-
-	float LiftTime;
-
-	float LiftHeight;
-
-	float MovementOffset;
-	
-	float LiftingTime = 0.0f;
-
-	float Time;
-
-	float TargetHeight = 0.0f;
-
-	UPROPERTY(EditAnywhere)
-	float MovementSpeed = 100.0f;
 
 	FVector DistanceUP;
 
-	FVector MoveUPVector = FVector(0, 0, MoveUP);
+
+	float Time;
+
+	float LiftingTime = 0.0f;
+
+
+	UPROPERTY(EditAnyWhere, Category = "Move")
+	float SpeedUp = 0.9;
+
+	UPROPERTY(EditAnyWhere, Category = "Move")
+	float SpeedDown = 0.25;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Stairs")
 	float InitialHeight = 0.0f;
