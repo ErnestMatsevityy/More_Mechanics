@@ -23,7 +23,15 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UPROPERTY(EditAnyWhere, Category = "Stairs")
+	float MoveUP;
+
 private:
+
+	FVector StartLocation;
+	float DistanceUPZ;
+
+
 	float Alpha;
 
 	float LiftTime;
@@ -39,12 +47,15 @@ private:
 	UPROPERTY(EditAnywhere)
 	float MovementSpeed = 100.0f;
 
-	UPROPERTY(EditAnywhere)
-	FVector DistanceUP = FVector(0, 0, 300);
+	FVector DistanceUP;
+
+	FVector MoveUPVector = FVector(0, 0, MoveUP);
 
 	UPROPERTY(EditDefaultsOnly, Category = "Stairs")
 	float InitialHeight = 0.0f;
 
 	float DistanceValue;
+
+	UPROPERTY(EditAnyWhere, Category = "Stairs")
 	float RangeTriggerValue;
 };
