@@ -26,7 +26,7 @@ public:
 
 	float Distance;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Move")
 	float RangeTrigger = 10;
 
 private:

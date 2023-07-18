@@ -39,8 +39,10 @@ private:
 	float LiftHeight;
 
 	float MovementOffset;
+	
+	float LiftingTime = 0.0f;
 
-	float ElapsedTime = 0.0f;
+	float Time;
 
 	float TargetHeight = 0.0f;
 

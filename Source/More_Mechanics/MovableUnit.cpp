@@ -36,10 +36,10 @@ void AMovableUnit::Tick(float DeltaTime)
 	UCheckingDistance* CheckingDistanceComponent = FindComponentByClass<UCheckingDistance>();
 	DistanceValue = CheckingDistanceComponent->Distance;
 	RangeTriggerValue = CheckingDistanceComponent->RangeTrigger;
-	
+
 	//if (DistanceValue <= RangeTriggerValue)
 	//{
-	//	ElapsedTime += DeltaTime;
+		
 
 	//	LiftTime = 0.3f; // Час підйому актора
 	//	LiftHeight = 110.0f; // Висота підйому актора
@@ -56,31 +56,49 @@ void AMovableUnit::Tick(float DeltaTime)
 	//	}
 	//}
 
-	// If the distance is less than the threshold, move this actor to the target location.
-	if (DistanceValue <= RangeTriggerValue) 
+	if (DistanceValue <= RangeTriggerValue)
 	{
-		DistanceUP = GetActorLocation() + FVector(0, 0, MoveUP);
+		Time += DeltaTime;
+		LiftingTime = LiftingTime + Time;
+		if (LiftingTime >= 1.0f)
+		{
+			LiftingTime = 1.0f;
+			Time = 0.0f;
+		}
+	}
+	if (DistanceValue >= RangeTriggerValue)
+	{
+		Time -= DeltaTime;
+		LiftingTime = LiftingTime + Time;
+		if (LiftingTime <= 0.0f)
+		{
+			LiftingTime = 0.0f;
+			Time = 0.0f;
+		}
+	}
+
+
+	// If the distance is less than the threshold, move this actor to the target location.
+	if (DistanceValue <= RangeTriggerValue)
+	{
+		DistanceUP = FVector(1160.0, 1670.0, MoveUP);
 		SetActorLocation(DistanceUP);
 	}
 
 	// If the distance is greater than the threshold, move this actor back to its original location.
-	else 
+	else
 	{
 		SetActorLocation(StartLocation);
 	}
 
 	// Move this actor smoothly between the two locations.
 	float lerpFactor = FMath::Clamp(DistanceValue / RangeTriggerValue, 0.0f, 1.0f);
-	SetActorLocation(FMath::Lerp(DistanceUP, StartLocation, lerpFactor));
+	SetActorLocation(FMath::Lerp(StartLocation, DistanceUP, LiftingTime));
 
 	UE_LOG(LogTemp, Warning, TEXT("DistanceValue: %f"), DistanceValue);
 	UE_LOG(LogTemp, Warning, TEXT("DistanceUP: %s"), *DistanceUP.ToString());
 	UE_LOG(LogTemp, Warning, TEXT("RangeTriggerValue: %f"), RangeTriggerValue);
-	UE_LOG(LogTemp, Warning, TEXT("------------"), DistanceValue);
+	UE_LOG(LogTemp, Warning, TEXT("LiftingTime: %f"), LiftingTime);
+	UE_LOG(LogTemp, Warning, TEXT("------------"));
 
-	//FVector actorLocation = GetActorLocation();
-	//float zOffset = 10.0f;
-	//FVector newLocation = actorLocation + FVector(0, 0, zOffset);
-
-	//UE_LOG(LogTemp, Warning, TEXT("New location: %s"), *newLocation.ToString());
 }
