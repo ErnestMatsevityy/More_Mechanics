@@ -27,6 +27,7 @@ public:
 	float MoveUP;
 
 private:
+	void GetDistance();
 
 	void MoveUp(float DeltaTime);
 
@@ -41,6 +42,8 @@ private:
 	float Time;
 
 	float LiftingTime = 0.0f;
+
+	float clampTime;
 
 
 	UPROPERTY(EditAnyWhere, Category = "Move")

@@ -2,7 +2,6 @@
 
 
 #include "MovableUnit.h"
-//#include "GameFramework/Actor.h"
 #include "CheckingDistance.h"
 #include "Math/UnrealMathUtility.h"
 
@@ -20,37 +19,38 @@ void AMovableUnit::BeginPlay()
 	
 	StartLocation = GetActorLocation();
 
-	DistanceUP = GetActorLocation() + FVector(0, 0, MoveUP);
+	DistanceUP = StartLocation + FVector(0, 0, MoveUP);
 }
 
 // Called every frame
 void AMovableUnit::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	UCheckingDistance* CheckingDistanceComponent = FindComponentByClass<UCheckingDistance>();
-	DistanceValue = CheckingDistanceComponent->Distance;
-	RangeTriggerValue = CheckingDistanceComponent->RangeTrigger;
 
-	// If the distance is less than the threshold, move this actor to the target location.
-	if (DistanceValue <= RangeTriggerValue)
+	GetDistance();
+		
+	if (DistanceValue <= RangeTriggerValue) // If the distance is less than the threshold, move this actor to the target location.
 	{
 		MoveUp(DeltaTime);
 	}
-
-	// If the distance is greater than the threshold, move this actor back to its original location.
-	else
+	else // If the distance is greater than the threshold, move this actor back to its original location.
 	{
 		MoveDown(DeltaTime);
 	}
 
-	// Move this actor smoothly between the two locations.
-	SetActorLocation(FMath::Lerp(StartLocation, DistanceUP, LiftingTime));
+	clampTime = FMath::Clamp(LiftingTime, 0.0f, 1.0f);
+	SetActorLocation(FMath::Lerp(StartLocation, DistanceUP, clampTime));
+}
+
+void AMovableUnit::GetDistance()
+{
+	UCheckingDistance* CheckingDistanceComponent = FindComponentByClass<UCheckingDistance>();
+	DistanceValue = CheckingDistanceComponent->Distance;
+	RangeTriggerValue = CheckingDistanceComponent->RangeTrigger;
 }
 
 void AMovableUnit::MoveUp(float DeltaTime)
 {
-	SetActorLocation(DistanceUP);
-
 	Time += DeltaTime;
 	LiftingTime = LiftingTime + (Time * SpeedUp);
 	if (LiftingTime >= 1.0f)
@@ -58,12 +58,12 @@ void AMovableUnit::MoveUp(float DeltaTime)
 		LiftingTime = 1.0f;
 		Time = 0.0f;
 	}
+
+	SetActorLocation(DistanceUP);
 }
 
 void AMovableUnit::MoveDown(float DeltaTime)
 {
-	SetActorLocation(StartLocation);
-
 	Time -= DeltaTime;
 	LiftingTime = LiftingTime + (Time * SpeedDown);
 	if (LiftingTime <= 0.0f)
@@ -71,4 +71,6 @@ void AMovableUnit::MoveDown(float DeltaTime)
 		LiftingTime = 0.0f;
 		Time = 0.0f;
 	}
+
+	SetActorLocation(StartLocation);
 }
