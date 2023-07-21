@@ -7,6 +7,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "Components/SceneComponent.h" // Для роботи з компонентами USceneComponent
 #include "Components/StaticMeshComponent.h" // Для роботи з компонентами UStaticMeshComponent
+#include "Camera/CameraComponent.h"
+
 
 // Sets default values for this component's properties
 UComponent_HideEnableDisableByTag::UComponent_HideEnableDisableByTag()
@@ -25,6 +27,7 @@ void UComponent_HideEnableDisableByTag::BeginPlay()
 	Super::BeginPlay();
 
     UGameplayStatics::GetAllActorsWithTag(GetWorld(), FName(TEXT("World1")), FoundActors);
+    
 }
 
 
@@ -33,36 +36,44 @@ void UComponent_HideEnableDisableByTag::TickComponent(float DeltaTime, ELevelTic
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-    SearchByTag();
+    Start();
 }
 
-void UComponent_HideEnableDisableByTag::SearchByTag()
+void UComponent_HideEnableDisableByTag::Start()
 {
     for (AActor* Actor : FoundActors)
     {
-        MeshComponent = Actor->FindComponentByClass<UStaticMeshComponent>();
-        CollisionComponent = Actor->FindComponentByClass<UPrimitiveComponent>();
+        SearchByTag(Actor);
+        Disable();
+
 
         if (HideActor)
         {
-            Disable();
+            Enable();
         }
         else
         {
-            Enable();
+            Disable();
         }
     }
 }
 
+void UComponent_HideEnableDisableByTag::SearchByTag(AActor* Actor)
+{
+    MeshComponent = Actor->FindComponentByClass<UStaticMeshComponent>();
+    CollisionComponent = Actor->FindComponentByClass<UPrimitiveComponent>();
+}
+
 void UComponent_HideEnableDisableByTag::Disable()
 {
-    MeshComponent->SetVisibility(false); // Приховати графічний компонент
+    //MeshComponent->SetVisibility(false); // Приховати графічний компонент
     CollisionComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    HiddenGame = true;
 }
 
 void UComponent_HideEnableDisableByTag::Enable()
 {
-    MeshComponent->SetVisibility(true); // Приховати графічний компонент
+    //MeshComponent->SetVisibility(true); // Приховати графічний компонент
     CollisionComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+    HiddenGame = false;
 }
-

@@ -20,6 +20,7 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
+
 	TArray<AActor*> FoundActors;
 
 
@@ -33,14 +34,17 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	FName World1;
 
-
-	void SearchByTag();
+	void SearchByTag(AActor* Actor);
 
 	void Disable();
 
 	void Enable();
+
+	void Start();
+
+
+	bool HiddenGame = true;
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
