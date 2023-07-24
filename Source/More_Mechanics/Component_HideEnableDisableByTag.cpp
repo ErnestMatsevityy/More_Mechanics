@@ -5,19 +5,14 @@
 #include "CoreMinimal.h"
 #include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
-#include "Components/SceneComponent.h" // Для роботи з компонентами USceneComponent
-#include "Components/StaticMeshComponent.h" // Для роботи з компонентами UStaticMeshComponent
-#include "Camera/CameraComponent.h"
+#include "Components/SceneComponent.h"
+#include "Components/StaticMeshComponent.h"
 
 
 // Sets default values for this component's properties
 UComponent_HideEnableDisableByTag::UComponent_HideEnableDisableByTag()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
 }
 
 
@@ -27,7 +22,6 @@ void UComponent_HideEnableDisableByTag::BeginPlay()
 	Super::BeginPlay();
 
     UGameplayStatics::GetAllActorsWithTag(GetWorld(), FName(TEXT("World1")), FoundActors);
-    
 }
 
 
@@ -45,7 +39,6 @@ void UComponent_HideEnableDisableByTag::Start()
     {
         SearchByTag(Actor);
         Disable();
-
 
         if (HideActor)
         {
@@ -66,14 +59,14 @@ void UComponent_HideEnableDisableByTag::SearchByTag(AActor* Actor)
 
 void UComponent_HideEnableDisableByTag::Disable()
 {
-    //MeshComponent->SetVisibility(false); // Приховати графічний компонент
+    //MeshComponent->SetVisibility(false);
     CollisionComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
     HiddenGame = true;
 }
 
 void UComponent_HideEnableDisableByTag::Enable()
 {
-    //MeshComponent->SetVisibility(true); // Приховати графічний компонент
+    //MeshComponent->SetVisibility(true);
     CollisionComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
     HiddenGame = false;
 }
