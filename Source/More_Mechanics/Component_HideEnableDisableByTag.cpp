@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
-#include "Components/SceneComponent.h"
+//#include "Components/SceneComponent.h"
 #include "Components/StaticMeshComponent.h"
 
 
@@ -51,7 +51,7 @@ void UComponent_HideEnableDisableByTag::Start()
     }
 }
 
-void UComponent_HideEnableDisableByTag::SearchByTag(AActor* Actor)
+void UComponent_HideEnableDisableByTag::SearchByTag(AActor* Actor )
 {
     MeshComponent = Actor->FindComponentByClass<UStaticMeshComponent>();
     CollisionComponent = Actor->FindComponentByClass<UPrimitiveComponent>();
